@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Photo Gallery | Playhouse SMP</title>
+    <!-- Bootstrap core CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <link href="mycss.css" rel="stylesheet">
+    <!-- Isotope and Magnific Popup CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css" rel="stylesheet">
+</head>
+<body class="photo-gallery-background">
+    
+        <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container navbar-container">
+            <a class="navbar-brand" href="index.html">
+                <img src="pics/playhouselogo.svg" alt="Playhouse SMP Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#features">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#join">Join Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="downloads.html">Downloads</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="photos.html"><i class="fas fa-images"></i> Photos</a>
+                            <a class="dropdown-item" href="https://www.patreon.com/playhouseminecraft"><i class="fas fa-heart"></i> Patreon</a>
+                            <a class="dropdown-item" href="members.html"><i class="fas fa-users"></i> Staff</a>
+                            <a class="dropdown-item" href="who.html"><i class="fas fa-info-circle"></i> About Us</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+  
+    <!-- Background Slideshow -->
+    <div class="background-slideshow-container">
+        <div class="background-slideshow"></div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="container photo-gallery-container" style="margin-top: 100px;">
+        <h2 class="text-center mb-4 styled-heading">Photo Gallery</h2>
+        <div class="portfolio-menu text-center mb-4">
+            <ul class="list-inline">
+                <li class="list-inline-item active" data-filter="*">All Photos</li>
+                <li class="list-inline-item" data-filter=".season1">Seasons 1-4</li>
+                <li class="list-inline-item" data-filter=".season5">Season 5</li>
+                <li class="list-inline-item" data-filter=".eventServer">Event Server</li>
+            </ul>
+        </div>
+        <div class="row portfolio-item" id="photoGallery"></div>        
+        </div>
+        
+    </div>
+
+    <!-- Bootstrap and jQuery Scripts -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/isotope/3.0.6/isotope.pkgd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+    <script src="jquery-background-slideshow.js"></script>
+    <!-- Custom Script for random background slideshowHere's the rest of the script with added debugging statements:
+
+```javascript
+    and gallery functionality -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const gallery = document.getElementById('photoGallery');
+            const categories = [
+                { name: 'season1', count: 82 },
+                { name: 'season5', count: 9 },
+                { name: 'eventServer', count: 7 }
+            ];
+        
+            // Dynamically load images
+            categories.forEach(category => {
+                for (let i = 1; i <= category.count; i++) {
+                    const imgDiv = document.createElement('div');
+                    imgDiv.className = `col-md-4 item ${category.name}`;
+                    // Ensure the image has a 'data-mfp-src' attribute for Magnific Popup
+                    imgDiv.innerHTML = `<img src="pics/Gallery/${category.name}/${i}.jpg" class="img-fluid popup-btn" data-mfp-src="pics/Gallery/${category.name}/${i}.jpg">`;
+                    gallery.appendChild(imgDiv);
+                }
+            });
+        
+            // Filtering logic
+            const buttons = document.querySelectorAll('.portfolio-menu ul li');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    const items = document.querySelectorAll('.portfolio-item .item');
+        
+                    items.forEach(item => {
+                        if (filter === '*' || item.classList.contains(filter.slice(1))) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+        
+                    // Update active state
+                    buttons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        
+            // Reinitialize Magnific Popup for dynamically loaded images
+            $('.portfolio-item').magnificPopup({
+                delegate: '.popup-btn', // the selector for gallery item
+                type: 'image',
+                gallery: {
+                    enabled: true
+                }
+            });
+        });
+        </script>
+    <script>
+        $(document).ready(() => {
+          const shuffle = (array) => {
+            let currentIndex = array.length, randomIndex;
+      
+            while (currentIndex !== 0) {
+              randomIndex = Math.floor(Math.random() * currentIndex);
+              currentIndex--;
+      
+              [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+      
+            return array;
+          };
+      
+          const images = Array.from({ length: 87 }, (_, i) => `pics/background/${i + 1}.jpg`);
+          shuffle(images);
+      
+          $("body").backgroundSlideshow({
+            onBeforeTransition: (index) => console.log("before transition", index),
+            onAfterTransition: (index) => console.log("after transition", index),
+            transitionDuration: 3000,
+            fixed: true,
+            images
+          });
+        });
+      </script>
+        
+</body>
+</html>

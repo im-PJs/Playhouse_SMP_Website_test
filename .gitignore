@@ -1,0 +1,23 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Backups and archives
+Old-Website-Backup-5-20-2024/
+*.zip
+*.7z
+*.rar
+
+# If you ever add tooling later
+node_modules/
+dist/
+build/
+.out/
+.tmp/
+.cache/
+
+# Editors
+.vscode/
+.idea/
+*.iml
