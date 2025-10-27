@@ -51,7 +51,7 @@ const seasons = [
     },
     {
         title: "Season 6",
-        description: "Explore incredible builds, shop at Allay Alley mall, and visit the Industrial District. Features community events like Scootball and the Trial Chamber Circuit.",
+        description: "Our most ambitious season yet! Explore incredible builds, shop at <strong>Allay Alley</strong> mall, and visit the <strong>Industrial District Mega Farms</strong>. Features community events like Scootball and the Trial Chamber Circuit.",
         thumbnail: "pics/season/s.png",
         downloadLink: "https://drive.google.com/uc?export=download&id=12STcjTPjyEl_zaMlEkScrvg1M-7_5ACR",
         size: "2.0 GB"
