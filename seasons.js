@@ -51,7 +51,7 @@ const seasons = [
     },
     {
         title: "Season 6",
-        description: "Our most ambitious season yet! Explore a massive 10k×10k world packed with incredible builds — from sprawling castles to island paradises. Shop at the vibrant <strong>Allay Alley</strong> mall, marvel at the <strong>Industrial District's</strong> mega farms (including a comically large sugarcane farm with 10,800 plants!), and try your luck at the <strong>Trial Chamber Circuit</strong>. Features community favorites like Scootball, holiday celebrations, and over 50 active players' creative masterpieces.",
+        description: "Explore incredible builds, shop at Allay Alley mall, and visit the Industrial District. Features community events like Scootball and the Trial Chamber Circuit.",
         thumbnail: "pics/season/s.png",
         downloadLink: "https://drive.google.com/uc?export=download&id=12STcjTPjyEl_zaMlEkScrvg1M-7_5ACR",
         size: "2.0 GB"
