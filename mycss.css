@@ -432,12 +432,10 @@ body::before {
 h1, h2 {
     text-align: center;
     font-weight: 700;
-    background: linear-gradient(135deg, #fff 0%, #e0a736 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #FFB84D;
     letter-spacing: 1px;
     margin-bottom: 2rem;
+    text-shadow: none;
 }
 
 h1 {
@@ -807,11 +805,15 @@ button:focus, .btn:focus {
 .styled-heading {
     text-align: center;
     font-weight: 800;
-    color: #f5d27a;
+    color: #FFB84D !important;
     padding-bottom: 20px;
     letter-spacing: 0.5px;
-    text-shadow: none;
-    filter: none;
+    text-shadow: none !important;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: #FFB84D !important;
+    background-clip: unset !important;
+    filter: none !important;
 }
 
 .text-white {
@@ -857,7 +859,7 @@ ol li, ul li {
 .home-page .inside-container,
 .who-background .inside-container {
     background-color: rgba(42, 31, 71, 0.85) !important;
-    margin-top: 50px !important; /* Reduced to remove extra space */
+    margin-top: 0px !important; /* Reduced to remove extra space */
 }
 
 /* Photos page alignment */
@@ -919,5 +921,225 @@ ol li, ul li {
     #seasonsContainer .col-md-4 {
         flex: 0 0 100%;
         max-width: 100%;
+    }
+}
+
+/* =========================================
+   TABLET NAVBAR (768px-991px)
+   ========================================= */
+
+@media only screen and (min-width: 769px) and (max-width: 991px) {
+    /* === NAVBAR === */
+    .navbar {
+        padding: 10px 15px !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .navbar-container {
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 0 !important;
+    }
+
+    .navbar-brand {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .navbar-brand img {
+        max-height: 42px !important;
+        height: 42px !important;
+        width: auto !important;
+        display: block !important;
+    }
+
+    /* Hamburger button */
+    .navbar-toggler {
+        padding: 8px 10px !important;
+        border: 1px solid #FFB84D !important;
+        background: transparent !important;
+        margin: 0 !important;
+    }
+
+    .navbar-toggler:hover,
+    .navbar-toggler:active,
+    .navbar-toggler:focus {
+        background: transparent !important;
+        border-color: #FFB84D !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Dropdown menu - centered with navbar background */
+    .navbar-collapse {
+        text-align: center !important;
+        background: rgba(26, 18, 52, 0.98) !important;
+        margin: 10px -15px 0 -15px !important;
+        padding: 15px 0 !important;
+        border-radius: 0 0 10px 10px !important;
+    }
+
+    .navbar-nav {
+        align-items: center !important;
+    }
+
+    .nav-item {
+        margin: 8px 0 !important;
+    }
+
+    .dropdown-menu {
+        background: rgba(20, 15, 40, 0.95) !important;
+        border: 1px solid rgba(255, 184, 77, 0.3) !important;
+        text-align: center !important;
+    }
+}
+
+/* =========================================
+   CONTAINER CENTERING (below 992px)
+   ========================================= */
+
+@media only screen and (max-width: 991px) {
+    /* === CONTAINER SPACING === */
+    .inside-container,
+    .dl-522,
+    .photo-gallery-container,
+    .staff-background .container,
+    .who-background .container {
+        margin-left: auto !important;
+        margin-right: auto !important;
+        max-width: calc(100% - 30px) !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+
+    /* === WHO PAGE LOGO === */
+    .who-background .col-lg-4 {
+        text-align: center !important;
+        margin-bottom: 30px !important;
+    }
+
+    .who-background .col-lg-4 img {
+        margin-left: auto !important;
+        margin-right: auto !important;
+        display: block !important;
+    }
+}
+
+/* =========================================
+   MOBILE OPTIMIZATIONS (768px and below)
+   ========================================= */
+
+@media only screen and (max-width: 768px) {
+    /* === NAVBAR === */
+    .navbar {
+        padding: 10px 15px !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .navbar-container {
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 0 !important;
+    }
+
+    .navbar-brand {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .navbar-brand img {
+        max-height: 42px !important;
+        height: 42px !important;
+        width: auto !important;
+        display: block !important;
+    }
+
+    /* Hamburger button */
+    .navbar-toggler {
+        padding: 8px 10px !important;
+        border: 1px solid #FFB84D !important;
+        background: transparent !important;
+        margin: 0 !important;
+    }
+
+    .navbar-toggler:hover,
+    .navbar-toggler:active,
+    .navbar-toggler:focus {
+        background: transparent !important;
+        border-color: #FFB84D !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Dropdown menu - centered with navbar background */
+    .navbar-collapse {
+        text-align: center !important;
+        background: rgba(26, 18, 52, 0.98) !important;
+        margin: 10px -15px 0 -15px !important;
+        padding: 15px 0 !important;
+        border-radius: 0 0 10px 10px !important;
+    }
+
+    .navbar-nav {
+        align-items: center !important;
+    }
+
+    .nav-item {
+        margin: 8px 0 !important;
+    }
+
+    .dropdown-menu {
+        background: rgba(20, 15, 40, 0.95) !important;
+        border: 1px solid rgba(255, 184, 77, 0.3) !important;
+        text-align: center !important;
+    }
+
+    /* === TEXT SIZING === */
+    h1 { font-size: 1.75rem !important; }
+    h2 { font-size: 1.4rem !important; }
+    h3 { font-size: 1.2rem !important; }
+
+    /* === CONTAINER SPACING === */
+    .inside-container {
+        margin-left: 15px !important;
+        margin-right: 15px !important;
+        width: calc(100% - 30px) !important;
+        padding: 25px 20px !important;
+    }
+
+    /* All page containers - centered with margins */
+    .dl-522,
+    .photo-gallery-container,
+    .staff-background .container,
+    .who-background .container {
+        margin-left: 15px !important;
+        margin-right: 15px !important;
+        width: calc(100% - 30px) !important;
+    }
+
+    /* === FOOTER === */
+    footer {
+        padding: 30px 15px !important;
+    }
+
+    footer .container {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+
+    footer p {
+        font-size: 0.85rem !important;
+        line-height: 1.6 !important;
+    }
+
+    footer .mb-3 a {
+        font-size: 1.4rem !important;
+        margin: 0 12px !important;
     }
 }

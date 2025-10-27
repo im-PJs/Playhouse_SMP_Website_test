@@ -37,7 +37,7 @@ const seasons = [
     },
     {
         title: "Create Mod World",
-        description: "Dive into the creative and mechanical wonders of the Create Mod. Experience a unique world filled with endless possibilities and engineering marvels.",
+        description: "Dive into the creative and mechanical wonders of the <a href='https://www.curseforge.com/minecraft/mc-mods/create' target='_blank' style='color: #FFD700; text-decoration: none; border-bottom: 1px dotted #FFD700; transition: all 0.2s ease-in-out;' onmouseover=\"this.style.textDecoration='underline'; this.style.cursor='pointer';\" onmouseout=\"this.style.textDecoration='none';\">Create Mod</a>. Experience a unique world filled with endless possibilities and engineering marvels.",
         thumbnail: "pics/season/create_mod.png", // Ensure you have this image in the correct path
         downloadLink: "https://drive.google.com/uc?export=download&id=1BWz5KglqcO-7zv1y-pxY2WZGM7eVjfz0", // Correct download link
         size: "1.22 GB" // Correct size

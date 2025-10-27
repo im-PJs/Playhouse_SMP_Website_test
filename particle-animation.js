@@ -9,13 +9,19 @@
     
     function initParticles() {
         setTimeout(() => {
+            // Disable particles on mobile for performance
+            if (window.innerWidth < 768) {
+                console.log('📱 Mobile device detected - particles disabled for performance');
+                return;
+            }
+
             const particlesContainer = document.querySelector('.particle-overlay');
-            
+
             if (!particlesContainer) {
                 console.warn('⚠️ Particle overlay element not found. Add <div class="particle-overlay"></div> to your HTML');
                 return;
             }
-            
+
             console.log('✅ Particle container found! Creating 3D particles...');
             
             // Apply perspective for 3D depth
@@ -31,23 +37,33 @@
             particlesContainer.style.zIndex = '2';
             
             function createParticle() {
+                // Create wrapper for mouse interaction
+                const wrapper = document.createElement('div');
+                wrapper.style.position = 'absolute';
+                wrapper.style.pointerEvents = 'none';
+
+                // Create actual particle
                 const particle = document.createElement('div');
-                
+
                 // Random depth (Z-axis)
                 const depth = Math.random() * 800 - 400; // -400 to 400px
                 const scale = 1 - Math.abs(depth) / 800; // smaller when farther
-                
+
                 // Random size (1–8px)
                 const size = (Math.random() * 7 + 1) * scale;
-                
+
                 // Random position - START BELOW SCREEN
                 const leftPosition = Math.random() * 100;
                 const bottomPosition = Math.random() * -30; // Start below screen (-30% to 0%)
-                
-                // Random animation delay and duration - FASTER!
-                const delay = Math.random() * 0.5; // minimal delay for instant start
-                const duration = Math.random() * 6 + 3; // 3–9s for faster movement
-                
+
+                // Random animation delay and duration with variety
+                // 20% fast particles, 80% slow particles
+                const isFast = Math.random() < 0.2;
+                const delay = Math.random() * 2; // staggered start
+                const duration = isFast
+                    ? Math.random() * 3 + 4  // Fast: 4-7 seconds
+                    : Math.random() * 7 + 8; // Slow: 8-15 seconds
+
                 // Colors from logo palette
                 const colors = [
                     'rgba(224, 167, 54, 1)',    // Bright Gold
@@ -57,33 +73,43 @@
                     'rgba(255, 255, 255, 0.9)'  // White
                 ];
                 const color = colors[Math.floor(Math.random() * colors.length)];
-                
-                // Apply styles
+
+                // Wrapper positioning
+                wrapper.style.left = leftPosition + '%';
+                wrapper.style.bottom = bottomPosition + '%';
+                wrapper.style.width = '0px';
+                wrapper.style.height = '0px';
+
+                // Apply styles to particle
                 particle.style.position = 'absolute';
                 particle.style.width = size + 'px';
                 particle.style.height = size + 'px';
                 particle.style.background = color;
                 particle.style.borderRadius = '50%';
-                particle.style.left = leftPosition + '%';
-                particle.style.bottom = bottomPosition + '%';
+                particle.style.left = '0';
+                particle.style.top = '0';
                 particle.style.opacity = 0; // Start invisible!
-                particle.style.boxShadow = `0 0 ${size * 6}px ${color}`;
+                // All particles get a simple glow
+                particle.style.boxShadow = `0 0 ${size * 3}px ${color}`;
                 particle.style.transform = `translateZ(${depth}px) scale(${scale})`;
                 particle.style.animation = `floatUpFade ${duration}s linear ${delay}s infinite`;
                 particle.style.pointerEvents = 'none';
-                
-                particlesContainer.appendChild(particle);
+
+                wrapper.appendChild(particle);
+                particlesContainer.appendChild(wrapper);
+
+                return wrapper;
             }
             
-            // Create 500 particles for dense effect
-            for (let i = 0; i < 500; i++) {
+            // Create 75 particles for better performance
+            for (let i = 0; i < 75; i++) {
                 createParticle();
             }
-            
-            console.log('✅ Created 500 3D particles successfully!');
+
+            console.log('✅ Created 75 3D particles successfully!');
         }, 100);
     }
-    
+
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initParticles);
     } else {
