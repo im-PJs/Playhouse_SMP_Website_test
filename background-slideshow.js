@@ -55,28 +55,49 @@ $(document).ready(() => {
         });
     };
 
-    // PHASE 1: Load first 2 backgrounds immediately
-    console.log(`⚡ Phase 1: Loading first 2 backgrounds for instant start...`);
-    Promise.all(priorityImages.map(loadImage)).then(() => {
-        if (validImages.length > 0) {
-            console.log(`✅ Initial backgrounds ready! Starting slideshow with ${validImages.length} images...`);
+    // PHASE 1: Load first 2 backgrounds immediately with retry logic
+    let retryAttempts = 0;
+    const maxRetries = 5;
 
-            // Start slideshow immediately with available images
-            $("body").backgroundSlideshow({
-                transitionDuration: 3000,
-                fixed: true,
-                images: validImages
-            });
+    function tryLoadInitialBackgrounds(imagesToTry) {
+        console.log(`⚡ Phase 1 (Attempt ${retryAttempts + 1}/${maxRetries}): Loading backgrounds...`);
 
-            slideshowStarted = true;
-            console.log('🎬 Slideshow started! Now loading remaining backgrounds...\n');
+        Promise.all(imagesToTry.map(loadImage)).then(() => {
+            if (validImages.length > 0) {
+                console.log(`✅ Initial backgrounds ready! Starting slideshow with ${validImages.length} images...`);
 
-            // PHASE 2: Load remaining backgrounds progressively
-            loadRemainingBackgrounds();
-        } else {
-            console.error('❌ No valid initial backgrounds found!');
-        }
-    });
+                // Start slideshow immediately with available images
+                $("body").backgroundSlideshow({
+                    transitionDuration: 3000,
+                    fixed: true,
+                    images: validImages
+                });
+
+                slideshowStarted = true;
+                console.log('🎬 Slideshow started! Now loading remaining backgrounds...\n');
+
+                // PHASE 2: Load remaining backgrounds progressively
+                loadRemainingBackgrounds();
+            } else {
+                retryAttempts++;
+                if (retryAttempts < maxRetries && remainingImages.length >= 2) {
+                    console.warn(`⚠️ Initial backgrounds failed to load. Retrying with different backgrounds (${retryAttempts}/${maxRetries})...`);
+
+                    // Pick 2 new random backgrounds from remaining pool
+                    const retry1 = remainingImages.shift();
+                    const retry2 = remainingImages.shift();
+
+                    // Try again with new images
+                    setTimeout(() => tryLoadInitialBackgrounds([retry1, retry2]), 500);
+                } else {
+                    console.error(`❌ Failed to load initial backgrounds after ${maxRetries} attempts. No backgrounds will display.`);
+                }
+            }
+        });
+    }
+
+    // Start initial load attempt
+    tryLoadInitialBackgrounds(priorityImages);
 
     // Load remaining backgrounds in the background
     function loadRemainingBackgrounds() {
