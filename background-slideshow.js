@@ -1,5 +1,5 @@
-// Playhouse SMP - Smart Background Slideshow
-// Automatically discovers and validates all background images
+// Playhouse SMP - Smart Background Slideshow with Progressive Loading
+// Loads first 2 backgrounds immediately, then progressively loads the rest
 // Filters out corrupted/missing images to prevent purple screens
 
 $(document).ready(() => {
@@ -16,67 +16,102 @@ $(document).ready(() => {
     };
 
     // Try loading images 1-87 (will auto-skip any that don't exist/are corrupted)
-    const images = Array.from({ length: 87 }, (_, i) => `pics/background/${i + 1}.jpg`);
-    shuffle(images);
+    const allImages = Array.from({ length: 87 }, (_, i) => `pics/background/${i + 1}.jpg`);
+    shuffle(allImages);
 
-    console.log(`📋 Scanning for valid background images...`);
+    console.log(`📋 Progressive loading strategy: Load first 2 backgrounds, then lazy-load remaining...`);
 
-    // Track loading states
-    let loadedCount = 0;
-    let failedImages = [];
-    const loadStates = {};
+    // Split into priority (first 2) and remaining
+    const priorityImages = allImages.slice(0, 2);
+    const remainingImages = allImages.slice(2);
+
     const validImages = [];
+    let totalLoaded = 0;
+    let slideshowStarted = false;
 
-    // Pre-validate images to catch loading errors
-    let validationPromises = images.map((imagePath) => {
+    // Load an image and validate it
+    const loadImage = (imagePath) => {
         return new Promise((resolve) => {
-            loadStates[imagePath] = 'loading';
             const img = new Image();
             const startTime = Date.now();
 
             img.onload = () => {
                 const loadTime = Date.now() - startTime;
-                loadedCount++;
-                loadStates[imagePath] = 'loaded';
+                totalLoaded++;
                 validImages.push(imagePath);
-                console.log(`✅ [${loadedCount}] Loaded in ${loadTime}ms: ${imagePath}`);
+                console.log(`✅ [${totalLoaded}] Loaded in ${loadTime}ms: ${imagePath}`);
                 resolve(true);
             };
 
             img.onerror = () => {
-                const loadTime = Date.now() - startTime;
-                failedImages.push(imagePath);
-                loadStates[imagePath] = 'failed';
-                // Silently skip - no need to log every missing image
+                console.log(`⏭️  Skipped (missing): ${imagePath}`);
                 resolve(false);
             };
 
             img.src = imagePath;
         });
-    });
+    };
 
-    // Wait for all validations to complete, then start slideshow
-    Promise.all(validationPromises).then(() => {
-        console.log(`\n📊 ===== BACKGROUND IMAGES SUMMARY =====`);
-        console.log(`   ✅ Successfully loaded: ${loadedCount} images`);
-        if (failedImages.length > 0) {
-            console.log(`   ⏭️  Skipped: ${failedImages.length} missing/corrupted images`);
-        }
-        console.log(`========================================\n`);
-
-        // Start the slideshow with only valid images
+    // PHASE 1: Load first 2 backgrounds immediately
+    console.log(`⚡ Phase 1: Loading first 2 backgrounds for instant start...`);
+    Promise.all(priorityImages.map(loadImage)).then(() => {
         if (validImages.length > 0) {
-            console.log(`🎬 Starting slideshow with ${validImages.length} images...`);
+            console.log(`✅ Initial backgrounds ready! Starting slideshow with ${validImages.length} images...`);
 
+            // Start slideshow immediately with available images
             $("body").backgroundSlideshow({
                 transitionDuration: 3000,
                 fixed: true,
                 images: validImages
             });
 
-            console.log('✅ Background slideshow started successfully!\n');
+            slideshowStarted = true;
+            console.log('🎬 Slideshow started! Now loading remaining backgrounds...\n');
+
+            // PHASE 2: Load remaining backgrounds progressively
+            loadRemainingBackgrounds();
         } else {
-            console.error('❌ No valid background images found!');
+            console.error('❌ No valid initial backgrounds found!');
         }
     });
+
+    // Load remaining backgrounds in the background
+    function loadRemainingBackgrounds() {
+        console.log(`🔄 Phase 2: Loading ${remainingImages.length} remaining backgrounds progressively...`);
+
+        // Load in batches of 5 to avoid overwhelming the browser
+        const batchSize = 5;
+        let currentBatch = 0;
+
+        function loadNextBatch() {
+            const start = currentBatch * batchSize;
+            const end = Math.min(start + batchSize, remainingImages.length);
+            const batch = remainingImages.slice(start, end);
+
+            if (batch.length === 0) {
+                console.log(`\n📊 ===== FINAL SUMMARY =====`);
+                console.log(`   ✅ Total valid backgrounds: ${validImages.length}`);
+                console.log(`   🎬 Slideshow running smoothly!`);
+                console.log(`===========================\n`);
+                return;
+            }
+
+            Promise.all(batch.map(loadImage)).then(() => {
+                // Update slideshow with new images
+                if (slideshowStarted && validImages.length > currentBatch * batchSize + 2) {
+                    $("body").backgroundSlideshow({
+                        transitionDuration: 3000,
+                        fixed: true,
+                        images: validImages
+                    });
+                }
+
+                currentBatch++;
+                // Continue loading next batch after a short delay
+                setTimeout(loadNextBatch, 500);
+            });
+        }
+
+        loadNextBatch();
+    }
 });
