@@ -55,53 +55,41 @@ $(document).ready(() => {
         });
     };
 
-    // PHASE 1: Load first 2 backgrounds immediately with retry logic
-    let retryAttempts = 0;
-    const maxRetries = 5;
+    // PHASE 1: Load initial batch of backgrounds (preloaded + next 20 = ~22 total)
+    // This provides fast load + good variety without DOM pollution
+    console.log(`⚡ Phase 1: Loading initial batch of backgrounds...`);
 
-    function tryLoadInitialBackgrounds(imagesToTry) {
-        console.log(`⚡ Phase 1 (Attempt ${retryAttempts + 1}/${maxRetries}): Loading backgrounds...`);
+    const initialBatchSize = 20; // Load 2 preloaded + 20 more = 22 total
+    const initialBatch = [...priorityImages, ...remainingImages.slice(0, initialBatchSize)];
 
-        Promise.all(imagesToTry.map(loadImage)).then(() => {
-            if (validImages.length > 0) {
-                console.log(`✅ Initial backgrounds ready! Starting slideshow with ${validImages.length} images...`);
+    // Remove these from remainingImages so we don't load them twice
+    remainingImages.splice(0, initialBatchSize);
 
-                // Start slideshow immediately with available images
-                $("body").backgroundSlideshow({
-                    transitionDuration: 3000,
-                    fixed: true,
-                    images: validImages
-                });
+    Promise.all(initialBatch.map(loadImage)).then(() => {
+        if (validImages.length > 0) {
+            console.log(`✅ Loaded ${validImages.length} backgrounds! Starting slideshow...`);
 
-                slideshowStarted = true;
-                console.log('🎬 Slideshow started! Now loading remaining backgrounds...\n');
+            // Start slideshow ONCE with initial batch - NEVER reinitialize
+            $("body").backgroundSlideshow({
+                transitionDuration: 3000,
+                fixed: true,
+                images: validImages
+            });
 
-                // PHASE 2: Load remaining backgrounds progressively
-                loadRemainingBackgrounds();
-            } else {
-                retryAttempts++;
-                if (retryAttempts < maxRetries && remainingImages.length >= 2) {
-                    console.warn(`⚠️ Initial backgrounds failed to load. Retrying with different backgrounds (${retryAttempts}/${maxRetries})...`);
+            slideshowStarted = true;
+            console.log('🎬 Slideshow started! Loading remaining backgrounds in background...\n');
 
-                    // Pick 2 new random backgrounds from remaining pool
-                    const retry1 = remainingImages.shift();
-                    const retry2 = remainingImages.shift();
-
-                    // Try again with new images
-                    setTimeout(() => tryLoadInitialBackgrounds([retry1, retry2]), 500);
-                } else {
-                    console.error(`❌ Failed to load initial backgrounds after ${maxRetries} attempts. No backgrounds will display.`);
-                }
-            }
-        });
-    }
-
-    // Start initial load attempt
-    tryLoadInitialBackgrounds(priorityImages);
+            // PHASE 2: Load remaining backgrounds progressively (but don't update slideshow)
+            loadRemainingBackgrounds();
+        } else {
+            console.error(`❌ Failed to load any backgrounds. Check image paths.`);
+        }
+    });
 
     // Load remaining backgrounds in the background
     function loadRemainingBackgrounds() {
-        console.log(`🔄 Phase 2: Loading ${remainingImages.length} remaining backgrounds progressively...`);
+        console.log(`🔄 Phase 2: Loading ${remainingImages.length} remaining backgrounds in background...`);
+        console.log(`   (Slideshow will continue with currently loaded images)`);
 
         // Load in batches of 5 to avoid overwhelming the browser
         const batchSize = 5;
@@ -121,14 +109,8 @@ $(document).ready(() => {
             }
 
             Promise.all(batch.map(loadImage)).then(() => {
-                // Update slideshow with new images
-                if (slideshowStarted && validImages.length > currentBatch * batchSize + 2) {
-                    $("body").backgroundSlideshow({
-                        transitionDuration: 3000,
-                        fixed: true,
-                        images: validImages
-                    });
-                }
+                // Just load images, DON'T reinitialize slideshow
+                // (Reinitializing creates duplicate div layers)
 
                 currentBatch++;
                 // Continue loading next batch after a short delay
