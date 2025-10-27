@@ -27,11 +27,18 @@
     <meta name="twitter:description" content="Meet the staff behind Playhouse SMP — a mature vanilla survival server for adults.">
     <meta name="twitter:image" content="https://playhousesmp.com/pics/playhousesmp.png">
 
+    <!-- Random Background Preload Selection -->
+    <script>
+        const bg1 = Math.floor(Math.random() * 50) + 1;
+        const bg2 = Math.floor(Math.random() * 50) + 1;
+        window.preloadedBackgrounds = [`pics/background/${bg1}.jpg`, `pics/background/${bg2}.jpg`];
+        document.write(`<link rel="preload" href="pics/background/${bg1}.jpg" as="image" type="image/jpeg">`);
+        document.write(`<link rel="preload" href="pics/background/${bg2}.jpg" as="image" type="image/jpeg">`);
+    </script>
+
     <!-- Preload Critical Images for Performance -->
     <link rel="preload" href="pics/playhouselogo.svg" as="image" type="image/svg+xml">
     <link rel="preload" href="pics/playhousesmp.png" as="image" type="image/png">
-    <link rel="preload" href="pics/background/1.jpg" as="image" type="image/jpeg">
-    <link rel="preload" href="pics/background/2.jpg" as="image" type="image/jpeg">
 
     <!-- Bootstrap core CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">

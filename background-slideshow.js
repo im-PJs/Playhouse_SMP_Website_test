@@ -15,15 +15,18 @@ $(document).ready(() => {
         return array;
     };
 
-    // Try loading images 1-87 (will auto-skip any that don't exist/are corrupted)
+    // Use the randomly preloaded backgrounds from index.html
+    const priorityImages = window.preloadedBackgrounds || [
+        'pics/background/1.jpg',
+        'pics/background/2.jpg'
+    ];
+
+    console.log(`📋 Progressive loading strategy: Using preloaded backgrounds ${priorityImages.join(', ')}`);
+
+    // Create array of all other images and shuffle
     const allImages = Array.from({ length: 87 }, (_, i) => `pics/background/${i + 1}.jpg`);
-    shuffle(allImages);
-
-    console.log(`📋 Progressive loading strategy: Load first 2 backgrounds, then lazy-load remaining...`);
-
-    // Split into priority (first 2) and remaining
-    const priorityImages = allImages.slice(0, 2);
-    const remainingImages = allImages.slice(2);
+    const remainingImages = allImages.filter(img => !priorityImages.includes(img));
+    shuffle(remainingImages);
 
     const validImages = [];
     let totalLoaded = 0;
