@@ -104,6 +104,8 @@ function renderSeasons() {
         downloadLink.href = season.downloadLink;
         downloadLink.className = 'btn btn-primary btn-dl';
         downloadLink.textContent = 'Download';
+        downloadLink.target = '_blank';
+        downloadLink.rel = 'noopener noreferrer';
 
         // Assemble card body
         cardBodyDiv.appendChild(title);
